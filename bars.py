@@ -36,50 +36,22 @@ def load_json(filepath):
 
 
 def get_biggest_bar(bars_json):
-    biggest_bar_name = ''
-    biggest_bar_seats_count = 0
-    biggest_bar_address = ''
-
-    for bar in bars_json:
-        if bar['SeatsCount'] > biggest_bar_seats_count:
-            biggest_bar_name = bar['Name']
-            biggest_bar_seats_count = bar['SeatsCount']
-            biggest_bar_address = bar['Address']
-
-    return 'Самый большой бар: {} ({})'.format(biggest_bar_name, biggest_bar_address)
+    biggest_bar = max(bars_json, key=lambda bar: bar['SeatsCount'])
+    return 'Самый большой бар: {} ({})'.format(biggest_bar['Name'], biggest_bar['Address'])
 
 
 def get_smallest_bar(bars_json):
-    smallest_bar_name = ''
-    smallest_bar_seats_count = bars_json[0]['SeatsCount']
-    smallest_bar_address = ''
-
-    for bar in bars_json:
-        if bar['SeatsCount'] < smallest_bar_seats_count:
-            smallest_bar_name = bar['Name']
-            smallest_bar_seats_count = bar['SeatsCount']
-            smallest_bar_address = bar['Address']
-
-    return 'Самый маленький бар: {} ({})'.format(smallest_bar_name, smallest_bar_address)
+    smallest_bar = min(bars_json, key=lambda bar: bar['SeatsCount'])
+    return 'Самый маленький бар: {} ({})'.format(smallest_bar['Name'], smallest_bar['Address'])
 
 
 def get_closest_bar(bars_json, longitude, latitude):
-    def get_distanse_to_bar(bar, longitude, latitude):
+    def get_distanse_to_bar(bar):
         bar_longitude, bar_latitude = bar['geoData']['coordinates'][0], bar['geoData']['coordinates'][1]
         return math.sqrt((longitude - bar_longitude) ** 2 + (latitude - bar_latitude) ** 2)
 
-    closest_bar_name = ''
-    closest_distance = get_distanse_to_bar(bars_json[0], longitude, latitude)
-    closest_bar_address = ''
-
-    for bar in bars_json:
-        distance_to_bar = get_distanse_to_bar(bar, longitude, latitude)
-        if distance_to_bar < closest_distance:
-            closest_bar_name = bar['Name']
-            closest_distance = distance_to_bar
-            closest_bar_address = bar['Address']
-
-    return 'Самый близкий бар: {} ({})'.format(closest_bar_name, closest_bar_address)
+    closest_bar = min(bars_json, key=get_distanse_to_bar)
+    return 'Самый близкий бар: {} ({})'.format(closest_bar['Name'], closest_bar['Address'])
 
 
 if __name__ == '__main__':
