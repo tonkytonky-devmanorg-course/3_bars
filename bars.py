@@ -9,12 +9,12 @@ def main():
 
     try:
         if sys.argv[1] == '-b':
-            print(get_biggest_bar(bars_json))
+            print(format_bar_output(get_biggest_bar(bars_json), 'Самый большой бар'))
         elif sys.argv[1] == '-s':
-            print(get_smallest_bar(bars_json))
+            print(format_bar_output(get_smallest_bar(bars_json), 'Самый маленький бар'))
         elif sys.argv[1] == '-c':
             longitude, latitude = float(sys.argv[2]), float(sys.argv[3])
-            print(get_closest_bar(bars_json, longitude, latitude))
+            print(format_bar_output(get_closest_bar(bars_json, longitude, latitude), 'Самый близкий бар'))
         else:
             print_usage_tip()
     except (IndexError, ValueError):
@@ -32,29 +32,30 @@ def print_usage_tip():
 
 
 def load_json(filepath):
-    with open(filepath, encoding='windows-1251') as input_file:
-        return json.load(input_file)
+    with open(filepath, encoding='windows-1251') as file_handler:
+        return json.load(file_handler)
 
 
 def get_biggest_bar(bars_json):
-    biggest_bar = max(bars_json, key=lambda bar: bar['SeatsCount'])
-    return 'Самый большой бар: {} ({})'.format(biggest_bar['Name'], biggest_bar['Address'])
+    return max(bars_json, key=lambda bar: bar['SeatsCount'])
 
 
 def get_smallest_bar(bars_json):
-    smallest_bar = min(bars_json, key=lambda bar: bar['SeatsCount'])
-    return 'Самый маленький бар: {} ({})'.format(smallest_bar['Name'], smallest_bar['Address'])
+    return min(bars_json, key=lambda bar: bar['SeatsCount'])
 
 
 def get_closest_bar(bars_json, longitude, latitude):
     get_distance_to_bar_partial = partial(get_distance_to_bar, longitude=longitude, latitude=latitude)
-    closest_bar = min(bars_json, key=get_distance_to_bar_partial)
-    return 'Самый близкий бар: {} ({})'.format(closest_bar['Name'], closest_bar['Address'])
+    return min(bars_json, key=get_distance_to_bar_partial)
 
 
 def get_distance_to_bar(bar, longitude, latitude):
     bar_longitude, bar_latitude = bar['geoData']['coordinates'][0], bar['geoData']['coordinates'][1]
     return math.sqrt((longitude - bar_longitude) ** 2 + (latitude - bar_latitude) ** 2)
+
+
+def format_bar_output(bar, label):
+    return '{}: {} ({})'.format(label, bar['Name'], bar['Address'])
 
 
 if __name__ == '__main__':
