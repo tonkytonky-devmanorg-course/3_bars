@@ -1,6 +1,7 @@
 import json
 import math
 import sys
+from functools import partial
 
 
 def main():
@@ -46,12 +47,14 @@ def get_smallest_bar(bars_json):
 
 
 def get_closest_bar(bars_json, longitude, latitude):
-    def get_distanse_to_bar(bar):
-        bar_longitude, bar_latitude = bar['geoData']['coordinates'][0], bar['geoData']['coordinates'][1]
-        return math.sqrt((longitude - bar_longitude) ** 2 + (latitude - bar_latitude) ** 2)
-
-    closest_bar = min(bars_json, key=get_distanse_to_bar)
+    get_distance_to_bar_partial = partial(get_distance_to_bar, longitude=longitude, latitude=latitude)
+    closest_bar = min(bars_json, key=get_distance_to_bar_partial)
     return 'Самый близкий бар: {} ({})'.format(closest_bar['Name'], closest_bar['Address'])
+
+
+def get_distance_to_bar(bar, longitude, latitude):
+    bar_longitude, bar_latitude = bar['geoData']['coordinates'][0], bar['geoData']['coordinates'][1]
+    return math.sqrt((longitude - bar_longitude) ** 2 + (latitude - bar_latitude) ** 2)
 
 
 if __name__ == '__main__':
