@@ -7,18 +7,18 @@ from functools import partial
 def _main():
     parser = argparse.ArgumentParser()
     args = get_args(parser)
-    bars_json = load_json(args.filename)
+    bars = load_json(args.filename)
 
     if args.mode == 'b':
-        print(format_bar_output(get_biggest_bar(bars_json), 'Самый большой бар'))
+        print(format_bar_output(get_biggest_bar(bars), 'Самый большой бар'))
     elif args.mode == 's':
-        print(format_bar_output(get_smallest_bar(bars_json), 'Самый маленький бар'))
+        print(format_bar_output(get_smallest_bar(bars), 'Самый маленький бар'))
     elif args.mode == 'c':
         if not all((args.lon, args.lat)):
             parser.error("for `c` option --lon and --lat values are required")
 
         longitude, latitude = args.lon, args.lat
-        print(format_bar_output(get_closest_bar(bars_json, longitude, latitude), 'Самый близкий бар'))
+        print(format_bar_output(get_closest_bar(bars, longitude, latitude), 'Самый близкий бар'))
 
 
 def get_args(parser):
