@@ -1,34 +1,37 @@
+import argparse
 import json
 import math
-import sys
 from functools import partial
 
 
-def main():
-    bars_json = load_json('bars.json')
+def _main():
+    parser = argparse.ArgumentParser()
+    args = get_args(parser)
+    bars_json = load_json(args.filename)
 
-    try:
-        if sys.argv[1] == '-b':
-            print(format_bar_output(get_biggest_bar(bars_json), 'Самый большой бар'))
-        elif sys.argv[1] == '-s':
-            print(format_bar_output(get_smallest_bar(bars_json), 'Самый маленький бар'))
-        elif sys.argv[1] == '-c':
-            longitude, latitude = float(sys.argv[2]), float(sys.argv[3])
-            print(format_bar_output(get_closest_bar(bars_json, longitude, latitude), 'Самый близкий бар'))
-        else:
-            print_usage_tip()
-    except (IndexError, ValueError):
-        print_usage_tip()
+    if args.mode == 'b':
+        print(format_bar_output(get_biggest_bar(bars_json), 'Самый большой бар'))
+    elif args.mode == 's':
+        print(format_bar_output(get_smallest_bar(bars_json), 'Самый маленький бар'))
+    elif args.mode == 'c':
+        if not all((args.lon, args.lat)):
+            parser.error("for `c` option --lon and --lat values are required")
+
+        longitude, latitude = float(args.lon), float(args.lat)
+        print(format_bar_output(get_closest_bar(bars_json, longitude, latitude), 'Самый близкий бар'))
 
 
-def print_usage_tip():
-    print(
-        'Please, call the script with one of the following arguments:\n'
-        '-b - to know the biggest bar\n'
-        '-s - to know the smallest bar\n'
-        '-c <your longitude> <your latitude> - to know the closest bar. '
-        'Input longitude and latitude as a float point numbers.'
+def get_args(parser):
+    parser.add_argument('filename', help='Path to JSON file from https://data.mos.ru/opendata/7710881420-bary')
+    parser.add_argument(
+        'mode', choices=['b', 's', 'c'],
+        help='Choose the bar you want to find: `b` for biggest, `s` for smallest, `c` for closest '
+             '(--lon and --lat values are required).'
     )
+    parser.add_argument('--lon', help='Current longitude (float point number)', type=float, default=None)
+    parser.add_argument('--lat', help='Current latitude (float point number)', type=float, default=None)
+
+    return parser.parse_args()
 
 
 def load_json(filepath):
@@ -59,4 +62,4 @@ def format_bar_output(bar, label):
 
 
 if __name__ == '__main__':
-    main()
+    _main()
