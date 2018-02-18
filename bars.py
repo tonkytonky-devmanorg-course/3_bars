@@ -17,7 +17,7 @@ def _main():
         if not all((args.lon, args.lat)):
             parser.error("for `c` option --lon and --lat values are required")
 
-        longitude, latitude = float(args.lon), float(args.lat)
+        longitude, latitude = args.lon, args.lat
         print(format_bar_output(get_closest_bar(bars_json, longitude, latitude), 'Самый близкий бар'))
 
 
