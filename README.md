@@ -12,11 +12,9 @@
 Запуск на Linux (если у вас установлен и Python 2 и Python 3, потребуется указать python3):
 
 ```#!bash
-$ python bars.py <path_to_json> b 
+$ python bars.py <path_to_json> --lon <current_longitude> --lat <current_latitude> 
 Самый большой бар: Спорт бар «Красная машина» (Автозаводская улица, дом 23, строение 1)
-$ python bars.py <path_to_json> s
 Самый маленький бар: БАР. СОКИ (Дубравная улица, дом 34/29)
-$ python bars.py c --lon <your longitude> --lat <your latitude>
 Самый близкий бар: БАР «ПИВМАГ» (Открытое шоссе, дом 24, корпус 12)
 ```
 
