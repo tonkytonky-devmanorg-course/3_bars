@@ -21,12 +21,12 @@ def get_args(parser):
         help='Path to JSON file from https://data.mos.ru/opendata/7710881420-bary'
     )
     parser.add_argument(
-        '--lon', help='Current longitude (float point number)',
-        type=float, recuire=True
+        '--lat', help='Current latitude (float point number)',
+        type=float, required=True, metavar='latitude'
     )
     parser.add_argument(
-        '--lat', help='Current latitude (float point number)',
-        type=float, recuire=True
+        '--lon', help='Current longitude (float point number)',
+        type=float, required=True, metavar='longitude'
     )
 
     return parser.parse_args()
