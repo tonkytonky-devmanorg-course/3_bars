@@ -7,8 +7,14 @@ from functools import partial
 def _main():
     parser = argparse.ArgumentParser()
     args = get_args(parser)
+
     longitude, latitude = args.lon, args.lat
     bars = load_json(args.filename)
+    if not bars:
+        parser.error(
+            'file with bars not found, '
+            'specify existing path in `filename` argument'
+        )
 
     print(format_bar_output(get_biggest_bar(bars), 'Самый большой бар'))
     print(format_bar_output(get_smallest_bar(bars), 'Самый маленький бар'))
@@ -35,8 +41,11 @@ def get_args(parser):
 
 
 def load_json(filepath):
-    with open(filepath, encoding='windows-1251') as file_handler:
-        return json.load(file_handler)
+    try:
+        with open(filepath, encoding='windows-1251') as file_handler:
+            return json.load(file_handler)
+    except FileNotFoundError:
+        return None
 
 
 def get_biggest_bar(bars):
