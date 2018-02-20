@@ -12,13 +12,15 @@ def _main():
 
     print(format_bar_output(get_biggest_bar(bars), 'Самый большой бар'))
     print(format_bar_output(get_smallest_bar(bars), 'Самый маленький бар'))
-    print(format_bar_output(get_closest_bar(bars, longitude, latitude), 'Самый близкий бар'))
+    print(format_bar_output(get_closest_bar(
+        bars, longitude, latitude), 'Самый близкий бар'))
 
 
 def get_args(parser):
     parser.add_argument(
         'filename',
-        help='Path to JSON file from https://data.mos.ru/opendata/7710881420-bary'
+        help='Path to JSON file from'
+             'https://data.mos.ru/opendata/7710881420-bary'
     )
     parser.add_argument(
         '--lat', help='Current latitude (float point number)',
@@ -46,13 +48,16 @@ def get_smallest_bar(bars):
 
 
 def get_closest_bar(bars, longitude, latitude):
-    get_distance_to_bar_partial = partial(get_distance_to_bar, longitude=longitude, latitude=latitude)
+    get_distance_to_bar_partial = partial(
+        get_distance_to_bar, longitude=longitude, latitude=latitude)
     return min(bars, key=get_distance_to_bar_partial)
 
 
 def get_distance_to_bar(bar, longitude, latitude):
-    bar_longitude, bar_latitude = bar['geoData']['coordinates'][0], bar['geoData']['coordinates'][1]
-    return math.sqrt((longitude - bar_longitude) ** 2 + (latitude - bar_latitude) ** 2)
+    bar_longitude = bar['geoData']['coordinates'][0]
+    bar_latitude = bar['geoData']['coordinates'][1]
+    return math.sqrt(
+        (longitude - bar_longitude) ** 2 + (latitude - bar_latitude) ** 2)
 
 
 def format_bar_output(bar, label):
