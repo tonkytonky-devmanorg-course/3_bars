@@ -37,17 +37,17 @@ def load_json(filepath):
         return json.load(file_handler)
 
 
-def get_biggest_bar(bars_json):
-    return max(bars_json, key=lambda bar: bar['SeatsCount'])
+def get_biggest_bar(bars):
+    return max(bars, key=lambda bar: bar['SeatsCount'])
 
 
-def get_smallest_bar(bars_json):
-    return min(bars_json, key=lambda bar: bar['SeatsCount'])
+def get_smallest_bar(bars):
+    return min(bars, key=lambda bar: bar['SeatsCount'])
 
 
-def get_closest_bar(bars_json, longitude, latitude):
+def get_closest_bar(bars, longitude, latitude):
     get_distance_to_bar_partial = partial(get_distance_to_bar, longitude=longitude, latitude=latitude)
-    return min(bars_json, key=get_distance_to_bar_partial)
+    return min(bars, key=get_distance_to_bar_partial)
 
 
 def get_distance_to_bar(bar, longitude, latitude):
